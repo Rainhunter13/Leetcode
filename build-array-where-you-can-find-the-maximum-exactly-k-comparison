@@ -1,0 +1,31 @@
+class Solution {
+private:
+    int memo[51][51][101] = {[0 ... 50][0 ... 50][0 ... 100] = -1};
+    const int p = 1e9 + 7;
+    
+    long long max(long long x, long long y) {
+        if (x>y) return x;
+        return y;
+    }
+    
+    long long anyMV(long long n, long long m, long long k, long long mv) {
+        if (mv != -1) if (memo[n][k][mv] != -1) return memo[n][k][mv];
+        if (n == 0 and k == 0) return 1;
+        if (n == 0) return 0;
+        long long ans = max(mv, 0)*anyMV(n-1, m, k, mv);
+        ans %= p;
+        if (k > 0) {
+            for (int i = max(1, mv + 1); i <= m; i++) {
+                ans += anyMV(n-1, m, k-1, i);
+                ans%=p;
+            }
+        }
+        if (mv != -1) memo[n][k][mv] = ans;
+        return ans;
+    }
+    
+public:
+    int numOfArrays(int n, int m, int k) {
+        return anyMV(n, m, k, -1);
+    }
+};
